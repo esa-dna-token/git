@@ -20,8 +20,8 @@ static void add_prefix_entry(struct hashmap *map, const char *name,
 	result->name = name;
 	result->prefix_length = prefix_length;
 	result->item = item;
-	hashmap_entry_init(result, memhash(name, prefix_length));
-	hashmap_add(map, result);
+	hashmap_entry_init(&result->e, memhash(name, prefix_length));
+	hashmap_add(map, &result->e);
 }
 
 static void init_prefix_map(struct prefix_map *prefix_map,
@@ -48,8 +48,8 @@ static void add_prefix_item(struct prefix_map *prefix_map,
 			break;
 
 		e.prefix_length = j;
-		hashmap_entry_init(&e, memhash(e.name, j));
-		e2 = hashmap_get(&prefix_map->map, &e, NULL);
+		hashmap_entry_init(&e.e, memhash(e.name, j));
+		e2 = hashmap_get(&prefix_map->map, &e.e, NULL);
 		if (!e2) {
 			/* prefix is unique at this stage */
 			item->prefix_length = j;
